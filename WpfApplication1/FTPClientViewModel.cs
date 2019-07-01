@@ -25,6 +25,41 @@ namespace WpfApplication1
                 _hostName = value;
                 this.OnPropertyChanged(() => this.HostName);
             }
-        }   
+        }
+
+        private string _userName = string.Empty;
+        public string UserName
+        {
+            get => _userName;
+            set
+            {
+                _userName = value;
+                this.OnPropertyChanged(() => this.UserName);
+            }
+        }
+
+        private string _password = string.Empty;
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                _password = value;
+                this.OnPropertyChanged(() => this.Password);
+            }
+        }
+
+        private int _port = 0;
+        public int Port
+        {
+            get => _port;
+            set
+            {
+                _port = value;
+                this.OnPropertyChanged(() => this.Port);
+            }
+
+        }
+
     }
 }

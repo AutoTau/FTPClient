@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WpfApplication1
 {
-    public class FTPClientViewModel
+    public class FTPClientViewModel : ObservableItem
     {
 
         FTPClientModel ClientModel;
@@ -16,6 +16,15 @@ namespace WpfApplication1
             ClientModel = new FTPClientModel();
         }
 
-
+        private string _hostName = string.Empty;
+        public string HostName
+        {
+            get => _hostName;
+            set
+            {
+                _hostName = value;
+                this.OnPropertyChanged(() => this.HostName);
+            }
+        }   
     }
 }

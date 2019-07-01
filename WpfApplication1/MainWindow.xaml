@@ -8,6 +8,73 @@
         mc:Ignorable="d"
         Title="FTP Client" Height="350" Width="525">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="12*"/>
+            <ColumnDefinition Width="50*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Column="0" Grid.Row="1" Foreground="Black" Visibility="Visible" Margin="22,0.4,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Host Name" Padding="0" Height="30" Width="90" FontSize="14" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        <TextBox Grid.Column="1" Name="HostName" Margin="4,0,221.4,24.8" Height="10" VerticalAlignment="Bottom" Grid.ColumnSpan="1" Text="{Binding HostName}" Grid.RowSpan="2" Background="LightBlue" Grid.Row="1">
+            <TextBox.ToolTip>
+                <StackPanel>
+                    <TextBlock FontWeight="Bold">Description</TextBlock>
+                    <TextBlock>Enter Hostname</TextBlock>
+                </StackPanel>
+            </TextBox.ToolTip>
+        </TextBox>
+
+        <Label Grid.Column="0" Grid.Row="3" Foreground="Black" Visibility="Visible" Margin="32,0.2,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Username" Padding="0" Height="30" Width="90" FontSize="14" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        <TextBox Grid.Column="1" Name="UserName" Margin="4,0,327.4,0.2" Height="10" VerticalAlignment="Bottom" Text="{Binding UserName}" Grid.Row ="2" Grid.RowSpan="2" Background="LightBlue">
+            <TextBox.ToolTip>
+                <StackPanel>
+                    <TextBlock FontWeight="Bold">Description</TextBlock>
+                    <TextBlock>Enter Username</TextBlock>
+                </StackPanel>
+            </TextBox.ToolTip>
+        </TextBox>
+
+        <Label Grid.Column="1" Grid.Row="3" Foreground="Black" Visibility="Visible" Margin="107,0.2,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Password" Padding="0" Height="30" Width="90" FontSize="14" Grid.RowSpan="2"/>
+        <TextBox Grid.Column="1" Name="PassWord" Margin="183,0,148.4,25" Height="10" VerticalAlignment="Bottom" Text="{Binding Password}" Grid.Row ="3" Grid.RowSpan="2" Background="LightBlue">
+            <TextBox.ToolTip>
+                <StackPanel>
+                    <TextBlock FontWeight="Bold">Description</TextBlock>
+                    <TextBlock>Enter Password</TextBlock>
+                </StackPanel>
+            </TextBox.ToolTip>
+        </TextBox>
+
+        <Label Grid.Column="1" Grid.Row="3" Foreground="Black" Visibility="Visible" Margin="284,0.2,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Port" Padding="0" Height="30" Width="90" FontSize="14" Grid.RowSpan="2"/>
+        <TextBox Grid.Column="1" Name="Port" Margin="321,0,54.4,25" Height="10" VerticalAlignment="Bottom" Text="{Binding Port}" Grid.Row ="3" Grid.RowSpan="2" Background="LightBlue">
+            <TextBox.ToolTip>
+                <StackPanel>
+                    <TextBlock FontWeight="Bold">Description</TextBlock>
+                    <TextBlock>Enter Port</TextBlock>
+                </StackPanel>
+            </TextBox.ToolTip>
+        </TextBox>
+
+        <Button Grid.Column="1" Content="Upload"  Command="{Binding UploadFile}" FontSize="12" Height="41" Margin="0,0,247.4,10.2" Width="76" VerticalAlignment="Center" HorizontalAlignment="Right" Name="UploadButton" Grid.Row="5" Grid.RowSpan="2">
+            <Button.ToolTip>
+                <StackPanel>
+                    <TextBlock FontWeight="Bold">Description</TextBlock>
+                    <TextBlock>Upload File</TextBlock>
+                </StackPanel>
+            </Button.ToolTip>
+        </Button>
+
+
+
+
     </Grid>
 </Controls:MetroWindow>

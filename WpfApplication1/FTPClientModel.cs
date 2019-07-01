@@ -9,5 +9,6 @@ namespace WpfApplication1
 {
     class FTPClientModel
     {
+
     }
 }

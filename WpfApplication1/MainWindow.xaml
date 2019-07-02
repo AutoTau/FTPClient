@@ -7,6 +7,9 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
         Title="FTP Client" Height="350" Width="525">
+    <Controls:MetroWindow.DataContext>
+        <local:FTPClientViewModel />
+    </Controls:MetroWindow.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -73,6 +76,14 @@
             </Button.ToolTip>
         </Button>
 
+        <Button Grid.Column="1" Content="Select"  Command="{Binding SelectFile}" FontSize="11" Height="26" Margin="0,0,95.4,24.8" Width="76" VerticalAlignment="Bottom" HorizontalAlignment="Right" Name="SelectFile" Grid.Row="1" Grid.RowSpan="2">
+            <Button.ToolTip>
+                <StackPanel>
+                    <TextBlock FontWeight="Bold">Description</TextBlock>
+                    <TextBlock>Select File to Upload</TextBlock>
+                </StackPanel>
+            </Button.ToolTip>
+        </Button>
 
 
 

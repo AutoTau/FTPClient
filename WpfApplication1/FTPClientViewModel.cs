@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Forms;
 
 namespace WpfApplication1
 {
@@ -10,10 +13,15 @@ namespace WpfApplication1
     {
 
         FTPClientModel ClientModel;
+        public ICommand UploadFile { get; private set; }
+        public ICommand SelectFile { get; private set; }
 
         public FTPClientViewModel()
         {
             ClientModel = new FTPClientModel();
+            this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port));
+            this.SelectFile = new Command(ced => true, ed => this.InitiateDialogBox());
+
         }
 
         private string _hostName = string.Empty;
@@ -58,7 +66,36 @@ namespace WpfApplication1
                 _port = value;
                 this.OnPropertyChanged(() => this.Port);
             }
+        }
 
+        private string _fileToUpload = string.Empty;
+        public string FileToUpload
+        {
+            get => _fileToUpload;
+            set
+            {
+                _fileToUpload = value;
+                this.OnPropertyChanged(() => this.FileToUpload);
+            }
+        }
+
+        public void InitiateDialogBox()
+        {
+            string startDirectory = Environment.SpecialFolder.Desktop.ToString();
+
+            var dialog = new System.Windows.Forms.OpenFileDialog
+            {
+                Filter = "All files (*.*)|*.*|All files (*.*)|*.*",
+                FilterIndex = 1,
+                InitialDirectory = startDirectory.ToString()
+            };
+
+            DialogResult result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                FileToUpload = dialog.FileName.ToString();
+            }
         }
 
     }

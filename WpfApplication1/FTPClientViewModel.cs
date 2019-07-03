@@ -56,7 +56,7 @@ namespace WpfApplication1
                 this.OnPropertyChanged(() => this.Password);
             }
         }
-
+        
         private int _port = 0;
         public int Port
         {

@@ -22,8 +22,8 @@ namespace WpfApplication1
         {
             try
             {
-                //FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format("{0}/{1}", HostName, FileToUpload)));
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}")));
+                string file = Path.GetFileName(FileToUpload);
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(UserName, Password);
                 Stream ftpStream = request.GetRequestStream();

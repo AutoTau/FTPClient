@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Forms;
+using System.ComponentModel;
+using System.Threading;
 
 namespace WpfApplication1
 {
@@ -16,12 +18,14 @@ namespace WpfApplication1
         public ICommand UploadFile { get; private set; }
         public ICommand SelectFile { get; private set; }
 
+        private BackgroundWorker _bgWorker = new BackgroundWorker();        
+
+
         public FTPClientViewModel()
         {
             ClientModel = new FTPClientModel();
             this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port));
             this.SelectFile = new Command(ced => true, ed => this.InitiateDialogBox());
-
         }
 
         private string _hostName = string.Empty;
@@ -79,6 +83,17 @@ namespace WpfApplication1
             }
         }
 
+        private string _testField = string.Empty;
+        public string TestField
+        {
+            get => _testField;
+            set
+            {
+                _testField = value;
+                this.OnPropertyChanged(() => this.TestField);
+            }
+        }
+
         public void InitiateDialogBox()
         {
             string startDirectory = Environment.SpecialFolder.Desktop.ToString();
@@ -97,6 +112,6 @@ namespace WpfApplication1
                 FileToUpload = dialog.FileName.ToString();
             }
         }
-
+        
     }
 }

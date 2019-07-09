@@ -48,7 +48,7 @@
         </TextBox>
 
         <Label Grid.Column="1" Grid.Row="3" Foreground="Black" Visibility="Visible" Margin="107,0.2,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Password" Padding="0" Height="30" Width="90" FontSize="14" Grid.RowSpan="2"/>
-        <TextBox Grid.Column="1" Name="PassWord" Margin="183,0,148.4,25" Height="10" VerticalAlignment="Bottom" Text="{Binding Password}" Grid.Row ="3" Grid.RowSpan="2" Background="LightBlue">
+        <TextBox Grid.Column="1" Name="PassWord" Margin="183,0,148.4,25" Height="10" VerticalAlignment="Bottom" Grid.Row ="3" Grid.RowSpan="2" Background="LightBlue" Text="{Binding Password}">
             <TextBox.ToolTip>
                 <StackPanel>
                     <TextBlock FontWeight="Bold">Description</TextBlock>
@@ -84,6 +84,8 @@
                 </StackPanel>
             </Button.ToolTip>
         </Button>
+        <ProgressBar Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="10,9.8,0,-13.2" Grid.Row="7" VerticalAlignment="Top" Width="374" RenderTransformOrigin="0.529,0.331" Name="progressBar" Minimum="0" Maximum="100" Value="{Binding WorkerState}"/>
+        <!--<Label x:Name="LabelStatus" Content="Uploaded 0%" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="144,53.8,0,-54.2" Grid.Row="7" VerticalAlignment="Top"/>-->
 
 
 

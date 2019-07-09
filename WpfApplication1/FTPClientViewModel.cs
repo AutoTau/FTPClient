@@ -16,7 +16,9 @@ namespace WpfApplication1
 
         FTPClientModel ClientModel;
         public ICommand UploadFile { get; private set; }
-        public ICommand SelectFile { get; private set; }
+        public ICommand SelectFileToUpload { get; private set; }
+        public ICommand SelectFileToDownload { get; private set; }
+        public ICommand DownloadFile { get; private set; }
 
         private BackgroundWorker _bgWorker = new BackgroundWorker();        
 
@@ -25,9 +27,14 @@ namespace WpfApplication1
         {
             ClientModel = new FTPClientModel();
             this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port));
-            this.SelectFile = new Command(ced => true, ed => this.InitiateDialogBox());
+            this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
+            this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());
+            this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port));
         }
 
+        /// <summary>
+        /// Gets or sets the hostname.
+        /// </summary>
         private string _hostName = string.Empty;
         public string HostName
         {
@@ -39,6 +46,9 @@ namespace WpfApplication1
             }
         }
 
+        /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
         private string _userName = string.Empty;
         public string UserName
         {
@@ -50,6 +60,9 @@ namespace WpfApplication1
             }
         }
 
+        /// <summary>
+        /// Gets or sets the Password.
+        /// </summary>
         private string _password = string.Empty;
         public string Password
         {
@@ -61,6 +74,9 @@ namespace WpfApplication1
             }
         }
         
+        /// <summary>
+        /// Gets or sets the Port number.
+        /// </summary>
         private int _port = 0;
         public int Port
         {
@@ -72,6 +88,9 @@ namespace WpfApplication1
             }
         }
 
+        /// <summary>
+        /// Gets or sets the File to be uploaded.
+        /// </summary>
         private string _fileToUpload = string.Empty;
         public string FileToUpload
         {
@@ -83,6 +102,9 @@ namespace WpfApplication1
             }
         }
 
+        /// <summary>
+        /// Gets or sets the GUI test field.
+        /// </summary>
         private string _testField = string.Empty;
         public string TestField
         {
@@ -94,6 +116,24 @@ namespace WpfApplication1
             }
         }
 
+        /// <summary>
+        /// Gets or sets the File to download.
+        /// </summary>
+        private string _fileToDownload = string.Empty;
+        public string FileToDownload
+        {
+            get => _fileToDownload;
+            set
+            {
+                _fileToDownload = value;
+                this.OnPropertyChanged(() => this.FileToDownload);
+            }
+        }
+
+        /// <summary>
+        /// File dialog to select the file to upload.
+        /// Default path is the system desktop path.
+        /// </summary>
         public void InitiateDialogBox()
         {
             string startDirectory = Environment.SpecialFolder.Desktop.ToString();
@@ -112,6 +152,30 @@ namespace WpfApplication1
                 FileToUpload = dialog.FileName.ToString();
             }
         }
-        
+
+        /// <summary>
+        /// File dialog to select the file to download.
+        /// Default path is ftp://hostname
+        /// </summary>
+        public void SelectFileFromFtpServer()
+        {
+            string startDirectory = string.Format($"ftp://{HostName}");
+
+            var dialog = new System.Windows.Forms.OpenFileDialog
+            {
+                Filter = "All files (*.*)|*.*|All files (*.*)|*.*",
+                FilterIndex = 1,
+                InitialDirectory = startDirectory.ToString()
+            };
+
+            DialogResult result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                FileToDownload = dialog.FileName.ToString();
+            }
+        }
+
+
     }
 }

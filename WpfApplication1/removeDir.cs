@@ -15,7 +15,7 @@ using System.Collections;
 namespace WpfApplication1
 {
 
-    class removeDir
+    public class removeDir
     {
         // Process directory passed in as argument
         public static void ProcessDirectory(string targetDirectory)

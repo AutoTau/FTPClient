@@ -15,6 +15,9 @@ namespace WpfApplication1
     {
 
         FTPClientModel ClientModel;
+        removeFile RemoveCertainFile;
+        removeDir RemoveCertainDirectory;
+
         public ICommand UploadFile { get; private set; }
         public ICommand SelectFileToUpload { get; private set; }
         public ICommand SelectFileToDownload { get; private set; }
@@ -28,6 +31,9 @@ namespace WpfApplication1
         public FTPClientViewModel()
         {
             ClientModel = new FTPClientModel();
+            RemoveCertainFile = new removeFile();
+            RemoveCertainDirectory = new removeDir();
+
             this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port));
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
             this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());

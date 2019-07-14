@@ -11,7 +11,7 @@ using System.IO;
 
 namespace WpfApplication1
 {
-    class removeFile
+    public class removeFile
     {
     
         // remove file from directory. Takes first argument from command line and 

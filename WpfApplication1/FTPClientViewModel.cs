@@ -19,6 +19,8 @@ namespace WpfApplication1
         public ICommand SelectFileToUpload { get; private set; }
         public ICommand SelectFileToDownload { get; private set; }
         public ICommand DownloadFile { get; private set; }
+        public ICommand RemoveFile { get; private set; }
+        public ICommand RemoveDirectory { get; private set; }
 
         private BackgroundWorker _bgWorker = new BackgroundWorker();        
 
@@ -127,6 +129,20 @@ namespace WpfApplication1
             {
                 _fileToDownload = value;
                 this.OnPropertyChanged(() => this.FileToDownload);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Files or Directories to be removed.
+        /// </summary>
+        private string _pathOfFileToRemove = string.Empty;
+        public string PathOfFileToRemove
+        {
+            get => _pathOfFileToRemove;
+            set
+            {
+                _pathOfFileToRemove = value;
+                this.OnPropertyChanged(() => this.PathOfFileToRemove);
             }
         }
 

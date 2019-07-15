@@ -103,7 +103,26 @@
             </Button.ToolTip>
         </Button>
 
-        <ProgressBar Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="10,9.8,0,-13.2" Grid.Row="7" VerticalAlignment="Top" Width="374" RenderTransformOrigin="0.529,0.331" Name="progressBar" Minimum="0" Maximum="100" Value="{Binding WorkerState}"/>
+        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="10" Grid.ColumnSpan="2" Background="#86000000" Visibility="{Binding ProgressBarVisiblity}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="1" Grid.Row="8" VerticalAlignment="Center" HorizontalAlignment="Center" Text="File Upload or Download In Progress" FontSize="18" FontWeight="Bold" Foreground="DodgerBlue"/>
+            <Controls:MetroProgressBar  Grid.Column="1" Grid.Row="9" HorizontalAlignment="Center" IsIndeterminate="True" Height="10" Width="500" ToolTip="Download or Upload in progress..." Foreground="DarkSeaGreen"/>
+        </Grid>
+        <!--<ProgressBar Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="10,9.8,0,-13.2" Grid.Row="7" VerticalAlignment="Top" Width="374" RenderTransformOrigin="0.529,0.331" Name="progressBar" Minimum="0" Maximum="100" Value="{Binding WorkerState}"/>!-->
         <!--<Label x:Name="LabelStatus" Content="Uploaded 0%" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="144,53.8,0,-54.2" Grid.Row="7" VerticalAlignment="Top"/>-->
 
         <Label Grid.Row="7" Foreground="Black" Visibility="Visible" Margin="10,53.8,0,-58.2" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Remove Files" Padding="0" Height="30" Width="90" FontSize="14"/>

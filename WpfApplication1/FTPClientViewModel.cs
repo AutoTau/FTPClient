@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Threading;
+using System.Windows;
 
 namespace WpfApplication1
 {
@@ -25,11 +26,17 @@ namespace WpfApplication1
         public ICommand RemoveFile { get; private set; }
         public ICommand RemoveDirectory { get; private set; }
 
-        private BackgroundWorker _bgWorker = new BackgroundWorker();        
+        //private BackgroundWorker _bgWorker = new BackgroundWorker();
+
+        /// <summary>
+        /// Toggle on and off or hide the progress bar
+        /// </summary>        
+        public Visibility ProgressBarVisiblity { get; private set; }
 
 
         public FTPClientViewModel()
         {
+            ProgressBarVisiblity = Visibility.Collapsed;
             ClientModel = new FTPClientModel();
             RemoveCertainFile = new removeFile();
             RemoveCertainDirectory = new removeDir();
@@ -38,7 +45,21 @@ namespace WpfApplication1
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
             this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());
             this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port));
+            ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;
         }
+
+
+        /// <summary>
+        /// Toggles the progress bar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void FTPClientModel_ToggleProgressBar(object sender, bool e)
+        {
+            ProgressBarVisiblity = e ? Visibility.Visible : Visibility.Collapsed;
+            OnPropertyChanged(() => ProgressBarVisiblity);
+        }
+
 
         /// <summary>
         /// Gets or sets the hostname.

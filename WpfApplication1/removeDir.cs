@@ -39,10 +39,10 @@ namespace WpfApplication1
 
 
 
-        public static void DeleteDirectory()
+        public void DeleteDirectory(string path)
         {
-            String[] arguments = Environment.GetCommandLineArgs();
-            String path = arguments[1];
+            //String[] arguments = Environment.GetCommandLineArgs();
+            //String path = arguments[1];
 
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(path);
             // Delete this dir.

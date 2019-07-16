@@ -45,6 +45,7 @@ namespace WpfApplication1
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
             this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());
             this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port));
+            this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(PathOfFileToRemove));
             ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;
         }
 

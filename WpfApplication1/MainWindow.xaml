@@ -85,7 +85,7 @@
             </Button.ToolTip>
         </Button>
 
-        <Button Grid.Column="1" Content="Upload"  Command="{Binding SelectFileToUpload}" FontSize="11" Height="26" Margin="0,0,125.4,0.2" Width="76" VerticalAlignment="Bottom" HorizontalAlignment="Right" Name="SelectFile" Grid.RowSpan="2">
+        <Button Grid.Column="1" Content="SelectUpload"  Command="{Binding SelectFileToUpload}" FontSize="10" Height="26" Margin="0,0,125.4,0.2" Width="90" VerticalAlignment="Bottom" HorizontalAlignment="Right" Name="SelectFile" Grid.RowSpan="2">
             <Button.ToolTip>
                 <StackPanel>
                     <TextBlock FontWeight="Bold">Description</TextBlock>
@@ -94,7 +94,7 @@
             </Button.ToolTip>
         </Button>
 
-        <Button Grid.Column="1" Content="Download"  Command="{Binding SelectFileToDownload}" FontSize="11" Height="26" Margin="0,0,23.4,24.8" Width="87" VerticalAlignment="Bottom" HorizontalAlignment="Right" Name="SelectFileToDownload" Grid.RowSpan="2" Grid.Row="1">
+        <Button Grid.Column="1" Content="selectDownload"  Command="{Binding SelectFileToDownload}" FontSize="10" Height="26" Margin="0,0,5.4,24.8" Width="113" VerticalAlignment="Bottom" HorizontalAlignment="Right" Name="SelectFileToDownload" Grid.RowSpan="2" Grid.Row="1">
             <Button.ToolTip>
                 <StackPanel>
                     <TextBlock FontWeight="Bold">Description</TextBlock>

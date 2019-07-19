@@ -155,5 +155,14 @@
             </TextBox.ToolTip>
         </TextBox>
 
+        <Button Grid.Column="1" Content="Log Off"  Command="{Binding LogOffFromRemote}" FontSize="12" Height="31" Margin="0,100.8,10.4,-106.2" Width="61" VerticalAlignment="Center" HorizontalAlignment="Right" Name="LogOffFromRemoteServer" Grid.Row="7">
+            <Button.ToolTip>
+                <StackPanel>
+                    <TextBlock FontWeight="Bold">Description</TextBlock>
+                    <TextBlock>Log Off from Remote Server</TextBlock>
+                </StackPanel>
+            </Button.ToolTip>
+        </Button>
+
     </Grid>
 </Controls:MetroWindow>

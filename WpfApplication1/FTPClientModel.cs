@@ -33,7 +33,7 @@ namespace WpfApplication1
         /// <param name="Password"></param>
         /// <param name="FileToUpload"></param>
         /// <param name="Port"></param>
-        public void UploadSelectedFile(string HostName, string UserName, string Password, string FileToUpload, int Port)
+        public void UploadSelectedFile(string HostName, string UserName, string Password, string FileToUpload, int Port, bool AbortClient)
         {
             double percentage = 0;
             try
@@ -41,6 +41,10 @@ namespace WpfApplication1
                 ToggleProgressBar?.Invoke(this, true);
                 string file = Path.GetFileName(FileToUpload);
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
+                if (AbortClient == true)
+                {
+                    request.Abort();
+                }
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(UserName, Password);
                 Stream ftpStream = request.GetRequestStream();
@@ -105,6 +109,11 @@ namespace WpfApplication1
                 Console.WriteLine($"Exception thrown in DownloadSelectedFile(): {e.Message}, {e.StackTrace}");
                 ToggleProgressBar?.Invoke(this, false);
             }
+        }
+
+        public void LogOffFromServer()
+        {
+
         }
 
 

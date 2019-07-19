@@ -25,6 +25,7 @@ namespace WpfApplication1
         public ICommand DownloadFile { get; private set; }
         public ICommand RemoveFile { get; private set; }
         public ICommand RemoveDirectory { get; private set; }
+        public ICommand LogOffFromRemote { get; private set; }
 
         //private BackgroundWorker _bgWorker = new BackgroundWorker();
 
@@ -41,12 +42,13 @@ namespace WpfApplication1
             RemoveCertainFile = new removeFile();
             RemoveCertainDirectory = new removeDir();
 
-            this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port));
+            this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port,false));
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
             this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());
             this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port));
             this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(PathOfFileToRemove));
             this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(PathOfFileToRemove));
+            this.LogOffFromRemote = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName, UserName, Password, FileToUpload, Port, true));
             ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;
         }
 
@@ -220,7 +222,6 @@ namespace WpfApplication1
                 FileToDownload = dialog.FileName.ToString();
             }
         }
-
 
     }
 }

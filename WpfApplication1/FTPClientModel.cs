@@ -91,14 +91,14 @@ namespace WpfApplication1
         }
 
         /// <summary>
-        /// Returns a string of file names from directory
+        /// Returns a string of file names from directory,
+        /// following Microsoft's online documentation
         /// </summary>
         /// <param name="hostName"></param>
         /// <param name="userName"></param>
         /// <param name="password"></param>
         public string GetDirectory(string hostName, string userName, string password)
         {
-            // Get the object used to communicate with the server.
             FtpWebRequest request = (FtpWebRequest) WebRequest.Create($"ftp://{hostName}/");
             request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
@@ -110,7 +110,6 @@ namespace WpfApplication1
             StreamReader reader = new StreamReader(responseStream);
             Console.WriteLine(reader.ReadToEnd());
 
-            //Console.WriteLine($"Directory List Complete, status {response.StatusDescription}");
             string directoryInfo = response.StatusDescription;
 
             reader.Close();

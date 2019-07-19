@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 
-namespace rmFile
+namespace WpfApplication1
 {
-    class removeFile
+    public class removeFile
     {
     
         // remove file from directory. Takes first argument from command line and 
         // checks if valid input, deletes file from directory and outputs success message
-        static void Main(string[] args)
+        public void DeleteFile(string path)
         {
-            String[] arguments = Environment.GetCommandLineArgs();
-            String path = arguments[1];
+            //String[] arguments = Environment.GetCommandLineArgs();
+            //String path = arguments[1];
 
             System.IO.FileInfo file = new System.IO.FileInfo(path);
             try

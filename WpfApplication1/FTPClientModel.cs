@@ -15,6 +15,15 @@ namespace WpfApplication1
 {
     public class FTPClientModel
     {
+        public event EventHandler<bool> ToggleProgressBar;
+
+        /// <summary>
+        /// Default constructor, sets ToggleProgressBar to false initially
+        /// </summary>
+        public FTPClientModel()
+        {
+            ToggleProgressBar?.Invoke(this, false);
+        }
 
         /// <summary>
         /// Uploads the file the user selects
@@ -29,6 +38,7 @@ namespace WpfApplication1
             double percentage = 0;
             try
             {
+                ToggleProgressBar?.Invoke(this, true);
                 string file = Path.GetFileName(FileToUpload);
                 FtpWebRequest request =
                     (FtpWebRequest) WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
@@ -51,13 +61,13 @@ namespace WpfApplication1
 
                 fStream.Close();
                 ftpStream.Close();
+                ToggleProgressBar?.Invoke(this, false);
                 return;
-
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message, e.StackTrace, e?.InnerException);
+                ToggleProgressBar?.Invoke(this, false);
             }
         }
 
@@ -73,21 +83,30 @@ namespace WpfApplication1
         public void DownloadSelectedFile(string hostName, string userName, string password, string fileToDownload,
             int port)
         {
-            var request =
-                (FtpWebRequest) WebRequest.Create(new Uri(string.Format($"ftp://{hostName}/{fileToDownload}")));
-            request.Method = WebRequestMethods.Ftp.DownloadFile;
+            try
+            {
+                ToggleProgressBar?.Invoke(this, true);
+                var request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{hostName}/{fileToDownload}")));
+                request.Method = WebRequestMethods.Ftp.DownloadFile;
 
-            request.Credentials = new NetworkCredential(userName, password);
+                request.Credentials = new NetworkCredential(userName, password);
 
-            var response = (FtpWebResponse) request.GetResponse();
-            var responseStream = response.GetResponseStream();
-            var reader = new StreamReader(responseStream);
-            Console.WriteLine(reader.ReadToEnd());
+                var response = (FtpWebResponse)request.GetResponse();
+                var responseStream = response.GetResponseStream();
+                var reader = new StreamReader(responseStream);
+                Console.WriteLine(reader.ReadToEnd());
 
-            Console.WriteLine($"Download complete. Status: {response.StatusDescription}");
+                Console.WriteLine($"Download complete. Status: {response.StatusDescription}");
 
-            reader.Close();
-            response.Close();
+                reader.Close();
+                response.Close();
+                ToggleProgressBar?.Invoke(this, false);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Exception thrown in DownloadSelectedFile(): {e.Message}, {e.StackTrace}");
+                ToggleProgressBar?.Invoke(this, false);
+            }
         }
 
         /// <summary>

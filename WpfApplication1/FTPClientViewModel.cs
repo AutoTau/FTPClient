@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Threading;
+using System.Windows;
 
 namespace WpfApplication1
 {
@@ -15,22 +16,52 @@ namespace WpfApplication1
     {
 
         FTPClientModel ClientModel;
+        removeFile RemoveCertainFile;
+        removeDir RemoveCertainDirectory;
+
         public ICommand UploadFile { get; private set; }
         public ICommand SelectFileToUpload { get; private set; }
         public ICommand SelectFileToDownload { get; private set; }
         public ICommand DownloadFile { get; private set; }
+        public ICommand RemoveFile { get; private set; }
+        public ICommand RemoveDirectory { get; private set; }
 
-        private BackgroundWorker _bgWorker = new BackgroundWorker();        
+        //private BackgroundWorker _bgWorker = new BackgroundWorker();
+
+        /// <summary>
+        /// Toggle on and off or hide the progress bar
+        /// </summary>        
+        public Visibility ProgressBarVisiblity { get; private set; }
 
 
         public FTPClientViewModel()
         {
+            ProgressBarVisiblity = Visibility.Collapsed;
             ClientModel = new FTPClientModel();
+            RemoveCertainFile = new removeFile();
+            RemoveCertainDirectory = new removeDir();
+
             this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port));
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
             this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());
             this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port));
+            this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(PathOfFileToRemove));
+            this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(PathOfFileToRemove));
+            ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;
         }
+
+
+        /// <summary>
+        /// Toggles the progress bar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void FTPClientModel_ToggleProgressBar(object sender, bool e)
+        {
+            ProgressBarVisiblity = e ? Visibility.Visible : Visibility.Collapsed;
+            OnPropertyChanged(() => ProgressBarVisiblity);
+        }
+
 
         /// <summary>
         /// Gets or sets the hostname.
@@ -127,6 +158,20 @@ namespace WpfApplication1
             {
                 _fileToDownload = value;
                 this.OnPropertyChanged(() => this.FileToDownload);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Files or Directories to be removed.
+        /// </summary>
+        private string _pathOfFileToRemove = string.Empty;
+        public string PathOfFileToRemove
+        {
+            get => _pathOfFileToRemove;
+            set
+            {
+                _pathOfFileToRemove = value;
+                this.OnPropertyChanged(() => this.PathOfFileToRemove);
             }
         }
 

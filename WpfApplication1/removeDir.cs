@@ -12,10 +12,10 @@ using System.IO.IsolatedStorage;
 using System.Collections;
 
 
-namespace rmDir
+namespace WpfApplication1
 {
 
-    class removeDir
+    public class removeDir
     {
         // Process directory passed in as argument
         public static void ProcessDirectory(string targetDirectory)
@@ -39,10 +39,10 @@ namespace rmDir
 
 
 
-        static void Main(string[] args)
+        public void DeleteDirectory(string path)
         {
-            String[] arguments = Environment.GetCommandLineArgs();
-            String path = arguments[1];
+            //String[] arguments = Environment.GetCommandLineArgs();
+            //String path = arguments[1];
 
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(path);
             // Delete this dir.
@@ -63,9 +63,6 @@ namespace rmDir
                 Console.WriteLine("{0} is not a valid file or directory.", e);
 
             }
-
-
-
         }
     }
 }

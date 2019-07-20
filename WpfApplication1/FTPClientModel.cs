@@ -122,8 +122,8 @@ namespace WpfApplication1
                 ToggleProgressBar?.Invoke(this, false);
             }
         }
-        
-        
+
+
         /// <summary>
         /// Downloads the sequence of file the user selects
         /// </summary>
@@ -131,6 +131,7 @@ namespace WpfApplication1
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <param name="filesToDownload"></param>
+        /// <param name="fileQueue"></param>
         /// <param name="port"></param>
         public void DownloadSelectedFiles(string hostName, string userName, string password, Queue<string> fileQueue,
             int port)

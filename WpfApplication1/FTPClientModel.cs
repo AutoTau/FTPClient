@@ -15,6 +15,20 @@ namespace WpfApplication1
 {
     public class FTPClientModel
     {
+        /// <summary>
+        /// Create a queue of files for upload/download
+        /// </summary>
+        public Queue<string> buildFileQueue(params string[] files)
+        {
+            Queue<string> fileQueue = new Queue<string>();
+            for (int i = 0; i <= files.Length; i++)
+            {
+                fileQueue.Enqueue(files[i]);
+            }
+            return fileQueue;
+        }
+    
+        
         public event EventHandler<bool> ToggleProgressBar;
 
         /// <summary>
@@ -109,6 +123,26 @@ namespace WpfApplication1
             }
         }
 
+
+        /// <summary>
+        /// Downloads the sequence of file the user selects
+        /// </summary>
+        /// <param name="hostName"></param>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <param name="filesToDownload"></param>
+        /// <param name="fileQueue"></param>
+        /// <param name="port"></param>
+        public void DownloadSelectedFiles(string hostName, string userName, string password, Queue<string> fileQueue,
+            int port)
+        {
+            while (fileQueue.Count != 0)
+            {
+                string file = fileQueue.Dequeue();
+                DownloadSelectedFile(hostName, userName, password, file, port);
+            }
+        }
+        
         /// <summary>
         /// Returns a string of file names from directory,
         /// following Microsoft's online documentation

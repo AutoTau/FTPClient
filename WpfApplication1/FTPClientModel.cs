@@ -15,6 +15,20 @@ namespace WpfApplication1
 {
     public class FTPClientModel
     {
+        /// <summary>
+        /// Create a queue of files for upload/download
+        /// </summary>
+        public Queue<string> buildFileQueue(params string[] files)
+        {
+            Queue<string> fileQueue = new Queue<string>();
+            for (int i = 0; i <= files.Length; i++)
+            {
+                fileQueue.Enqueue(files[i]);
+            }
+            return fileQueue;
+        }
+    
+        
         public event EventHandler<bool> ToggleProgressBar;
 
         /// <summary>
@@ -40,11 +54,16 @@ namespace WpfApplication1
             {
                 ToggleProgressBar?.Invoke(this, true);
                 string file = Path.GetFileName(FileToUpload);
+<<<<<<< HEAD
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
                 if (AbortClient == true)
                 {
                     request.Abort();
                 }
+=======
+                FtpWebRequest request =
+                    (FtpWebRequest) WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
+>>>>>>> 46401fed20eb6dfbfe32434b0dffd12ec684e594
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(UserName, Password);
                 Stream ftpStream = request.GetRequestStream();
@@ -52,16 +71,16 @@ namespace WpfApplication1
                 byte[] buffer = new byte[1024];
                 int byteRead = 0;
                 double read = 0;
-                double size = (double)fStream.Length;
-                
+                double size = (double) fStream.Length;
+
                 do
                 {
                     byteRead = fStream.Read(buffer, 0, 1024);
                     ftpStream.Write(buffer, 0, byteRead);
-                    read += (double)byteRead;
+                    read += (double) byteRead;
                     percentage = read / size * 100; //Progress percentage.
-                }
-                while (byteRead != 0);
+                } while (byteRead != 0);
+
                 fStream.Close();
                 ftpStream.Close();
                 ToggleProgressBar?.Invoke(this, false);
@@ -83,7 +102,8 @@ namespace WpfApplication1
         /// <param name="password"></param>
         /// <param name="fileToDownload"></param>
         /// <param name="port"></param>
-        public void DownloadSelectedFile(string hostName, string userName, string password, string fileToDownload, int port)
+        public void DownloadSelectedFile(string hostName, string userName, string password, string fileToDownload,
+            int port)
         {
             try
             {
@@ -117,5 +137,50 @@ namespace WpfApplication1
         }
 
 
+        /// <summary>
+        /// Downloads the sequence of file the user selects
+        /// </summary>
+        /// <param name="hostName"></param>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <param name="filesToDownload"></param>
+        /// <param name="fileQueue"></param>
+        /// <param name="port"></param>
+        public void DownloadSelectedFiles(string hostName, string userName, string password, Queue<string> fileQueue,
+            int port)
+        {
+            while (fileQueue.Count != 0)
+            {
+                string file = fileQueue.Dequeue();
+                DownloadSelectedFile(hostName, userName, password, file, port);
+            }
+        }
+        
+        /// <summary>
+        /// Returns a string of file names from directory,
+        /// following Microsoft's online documentation
+        /// </summary>
+        /// <param name="hostName"></param>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        public string GetDirectory(string hostName, string userName, string password)
+        {
+            FtpWebRequest request = (FtpWebRequest) WebRequest.Create($"ftp://{hostName}/");
+            request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+
+            request.Credentials = new NetworkCredential(userName, password);
+
+            FtpWebResponse response = (FtpWebResponse) request.GetResponse();
+
+            Stream responseStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(responseStream);
+            Console.WriteLine(reader.ReadToEnd());
+
+            string directoryInfo = response.StatusDescription;
+
+            reader.Close();
+            response.Close();
+            return directoryInfo;
+        }
     }
 }

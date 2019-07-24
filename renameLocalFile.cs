@@ -1,4 +1,4 @@
-// David Djernaes
+// Parker Moore
 // CS410 Agile group project
 
 using System;

@@ -1,7 +1,8 @@
 // This example requires the Chilkat API to have been previously unlocked.
 // See Global Unlock Sample for sample code.
 
-
+// https://docs.microsoft.com/en-us/dotnet/api/system.net.ftpwebrequest.timeout?view=netframework-4.8
+// Need to install Chilkat API
 
 using System;
 using System.Collections.Generic;

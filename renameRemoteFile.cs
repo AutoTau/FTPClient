@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 
-namespace reanameRemoteFile
+namespace rename
 {
-    class renameR
+    class renameRemoteFile
     {
     
         // rename file from directory. Takes first argument from command line and 
@@ -44,7 +44,7 @@ namespace reanameRemoteFile
 
                     // Set the current remote directory to where the file
                     // is located:
-                    success = ftp.ChangeRemoteDir("/testing");
+                    success = ftp.ChangeRemoteDir(path);
                     if (success != true) {
                         Debug.WriteLine(ftp.LastErrorText);
                         return;

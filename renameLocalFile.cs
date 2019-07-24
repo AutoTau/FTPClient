@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 
-namespace renameLocalFile
+namespace rename
 {
-    class rename
+    class renameLocalFile
     {
     
         // remove file from directory. Takes first argument from command line and 

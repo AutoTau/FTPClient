@@ -54,16 +54,15 @@ namespace WpfApplication1
             {
                 ToggleProgressBar?.Invoke(this, true);
                 string file = Path.GetFileName(FileToUpload);
-<<<<<<< HEAD
+//<<<<<<< HEAD
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
                 if (AbortClient == true)
                 {
                     request.Abort();
                 }
-=======
-                FtpWebRequest request =
-                    (FtpWebRequest) WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
->>>>>>> 46401fed20eb6dfbfe32434b0dffd12ec684e594
+//=======
+//                FtpWebRequest request = (FtpWebRequest) WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
+//>>>>>>> 46401fed20eb6dfbfe32434b0dffd12ec684e594
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(UserName, Password);
                 Stream ftpStream = request.GetRequestStream();

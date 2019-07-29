@@ -86,15 +86,21 @@ namespace WpfApplication1
         /// <param name="Password"></param>
         /// <param name="FileToUpload"></param>
         /// <param name="Port"></param>
-        public void UploadSelectedFile(string HostName, string UserName, string Password, string FileToUpload, int Port)
+        public void UploadSelectedFile(string HostName, string UserName, string Password, string FileToUpload, int Port, bool AbortClient)
         {
             double percentage = 0;
             try
             {
                 ToggleProgressBar?.Invoke(this, true);
                 string file = Path.GetFileName(FileToUpload);
-                FtpWebRequest request =
-                    (FtpWebRequest) WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
+                //If Abort flag is on...Abort!
+                if (AbortClient == true)
+                {
+                    request.Abort();
+                    MessageBox.Show("Connection has been aborted from file upload.");
+                    DownloadSelectedFile(HostName, UserName, Password, FileToUpload, Port, true);
+                }
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(UserName, Password);
                 Stream ftpStream = request.GetRequestStream();
@@ -121,6 +127,7 @@ namespace WpfApplication1
             {
                 Console.WriteLine(e.Message, e.StackTrace, e?.InnerException);
                 ToggleProgressBar?.Invoke(this, false);
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -134,12 +141,19 @@ namespace WpfApplication1
         /// <param name="fileToDownload"></param>
         /// <param name="port"></param>
         public void DownloadSelectedFile(string hostName, string userName, string password, string fileToDownload,
-            int port)
+            int port, bool AbortClient)
         {
             try
             {
                 ToggleProgressBar?.Invoke(this, true);
                 var request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{hostName}/{fileToDownload}")));
+                //If Abort flag is on...Abort!
+                if (AbortClient == true)
+                {
+                    request.Abort();
+                    MessageBox.Show("Connection has been aborted from file download");
+                    
+                }
                 request.Method = WebRequestMethods.Ftp.DownloadFile;
 
                 request.Credentials = new NetworkCredential(userName, password);
@@ -159,6 +173,7 @@ namespace WpfApplication1
             {
                 Console.WriteLine($"Exception thrown in DownloadSelectedFile(): {e.Message}, {e.StackTrace}");
                 ToggleProgressBar?.Invoke(this, false);
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -178,7 +193,7 @@ namespace WpfApplication1
             while (fileQueue.Count != 0)
             {
                 string file = fileQueue.Dequeue();
-                DownloadSelectedFile(hostName, userName, password, file, port);
+                DownloadSelectedFile(hostName, userName, password, file, port,false);
             }
         }
         

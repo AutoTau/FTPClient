@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.Windows;
-using MahApps.Metro.Controls;
+//using MahApps.Metro.Controls;
 
 namespace WpfApplication1
 {
@@ -47,88 +47,92 @@ namespace WpfApplication1
         /// <param name="Password"></param>
         /// <param name="FileToUpload"></param>
         /// <param name="Port"></param>
-        public void UploadSelectedFile(string HostName, string UserName, string Password, string FileToUpload, int Port, bool AbortClient)
+        public void UploadSelectedFile(string HostName, string UserName, string Password, List<string> FileToUpload, int Port, bool AbortClient)
         {
-            double percentage = 0;
-            try
-            {
-                ToggleProgressBar?.Invoke(this, true);
-                string file = Path.GetFileName(FileToUpload);
-<<<<<<< HEAD
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
-                if (AbortClient == true)
-                {
-                    request.Abort();
-                }
-=======
-                FtpWebRequest request =
-                    (FtpWebRequest) WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
->>>>>>> 46401fed20eb6dfbfe32434b0dffd12ec684e594
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(UserName, Password);
-                Stream ftpStream = request.GetRequestStream();
-                FileStream fStream = File.OpenRead(FileToUpload);
-                byte[] buffer = new byte[1024];
-                int byteRead = 0;
-                double read = 0;
-                double size = (double) fStream.Length;
+			foreach (var singleFile in FileToUpload)
+			{
 
-                do
-                {
-                    byteRead = fStream.Read(buffer, 0, 1024);
-                    ftpStream.Write(buffer, 0, byteRead);
-                    read += (double) byteRead;
-                    percentage = read / size * 100; //Progress percentage.
-                } while (byteRead != 0);
+				double percentage = 0;
+				try
+				{
+					ToggleProgressBar?.Invoke(this, true);
+					string file = Path.GetFileName(singleFile);
+					FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
+					if (AbortClient == true)
+					{
+						request.Abort();
+					}
+					FtpWebRequest request1 =
+						(FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{file}")));
+					request1.Method = WebRequestMethods.Ftp.UploadFile;
+					request1.Credentials = new NetworkCredential(UserName, Password);
+					Stream ftpStream = request1.GetRequestStream();
+					FileStream fStream = File.OpenRead(singleFile);
+					byte[] buffer = new byte[1024];
+					int byteRead = 0;
+					double read = 0;
+					double size = (double)fStream.Length;
 
-                fStream.Close();
-                ftpStream.Close();
-                ToggleProgressBar?.Invoke(this, false);
-                return;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message, e.StackTrace, e?.InnerException);
-                ToggleProgressBar?.Invoke(this, false);
-            }
-        }
+					do
+					{
+						byteRead = fStream.Read(buffer, 0, 1024);
+						ftpStream.Write(buffer, 0, byteRead);
+						read += (double)byteRead;
+						percentage = read / size * 100; //Progress percentage.
+					} while (byteRead != 0);
+
+					fStream.Close();
+					ftpStream.Close();
+					ToggleProgressBar?.Invoke(this, false);
+					return;
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e.Message, e.StackTrace, e?.InnerException);
+					ToggleProgressBar?.Invoke(this, false);
+				}
+			}
+		}
 
 
-        /// <summary>
-        /// Downloads the file the user selects
-        /// </summary>
-        /// <param name="hostName"></param>
-        /// <param name="userName"></param>
-        /// <param name="password"></param>
-        /// <param name="fileToDownload"></param>
-        /// <param name="port"></param>
-        public void DownloadSelectedFile(string hostName, string userName, string password, string fileToDownload,
+		/// <summary>
+		/// Downloads the file the user selects
+		/// </summary>
+		/// <param name="hostName"></param>
+		/// <param name="userName"></param>
+		/// <param name="password"></param>
+		/// <param name="fileToDownload"></param>
+		/// <param name="port"></param>
+		public void DownloadSelectedFile(string hostName, string userName, string password, List<string> fileToDownload,
             int port)
         {
-            try
-            {
-                ToggleProgressBar?.Invoke(this, true);
-                var request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{hostName}/{fileToDownload}")));
-                request.Method = WebRequestMethods.Ftp.DownloadFile;
+			foreach (var singleFile in fileToDownload)
+			{
+				try
+				{
+					ToggleProgressBar?.Invoke(this, true);
+					var request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{hostName}/{singleFile}")));
+					request.Method = WebRequestMethods.Ftp.DownloadFile;
 
-                request.Credentials = new NetworkCredential(userName, password);
+					request.Credentials = new NetworkCredential(userName, password);
 
-                var response = (FtpWebResponse)request.GetResponse();
-                var responseStream = response.GetResponseStream();
-                var reader = new StreamReader(responseStream);
-                Console.WriteLine(reader.ReadToEnd());
+					var response = (FtpWebResponse)request.GetResponse();
+					var responseStream = response.GetResponseStream();
+					var reader = new StreamReader(responseStream);
+					Console.WriteLine(reader.ReadToEnd());
 
-                Console.WriteLine($"Download complete. Status: {response.StatusDescription}");
+					Console.WriteLine($"Download complete. Status: {response.StatusDescription}");
 
-                reader.Close();
-                response.Close();
-                ToggleProgressBar?.Invoke(this, false);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Exception thrown in DownloadSelectedFile(): {e.Message}, {e.StackTrace}");
-                ToggleProgressBar?.Invoke(this, false);
-            }
+					reader.Close();
+					response.Close();
+					ToggleProgressBar?.Invoke(this, false);
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine($"Exception thrown in DownloadSelectedFile(): {e.Message}, {e.StackTrace}");
+					ToggleProgressBar?.Invoke(this, false);
+				}
+			}
         }
 
         public void LogOffFromServer()
@@ -137,25 +141,6 @@ namespace WpfApplication1
         }
 
 
-        /// <summary>
-        /// Downloads the sequence of file the user selects
-        /// </summary>
-        /// <param name="hostName"></param>
-        /// <param name="userName"></param>
-        /// <param name="password"></param>
-        /// <param name="filesToDownload"></param>
-        /// <param name="fileQueue"></param>
-        /// <param name="port"></param>
-        public void DownloadSelectedFiles(string hostName, string userName, string password, Queue<string> fileQueue,
-            int port)
-        {
-            while (fileQueue.Count != 0)
-            {
-                string file = fileQueue.Dequeue();
-                DownloadSelectedFile(hostName, userName, password, file, port);
-            }
-        }
-        
         /// <summary>
         /// Returns a string of file names from directory,
         /// following Microsoft's online documentation

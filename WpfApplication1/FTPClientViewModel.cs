@@ -45,7 +45,7 @@ namespace WpfApplication1
             this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port,false));
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
             this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());
-            this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port));
+            this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port,false));
             this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(PathOfFileToRemove));
             this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(PathOfFileToRemove));
             this.LogOffFromRemote = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName, UserName, Password, FileToUpload, Port, true));

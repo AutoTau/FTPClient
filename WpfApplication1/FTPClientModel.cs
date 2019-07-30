@@ -15,6 +15,7 @@ namespace WpfApplication1
 {
     public class FTPClientModel
     {
+        
         /// <summary>
         /// Create a queue of files for upload/download
         /// </summary>
@@ -30,7 +31,6 @@ namespace WpfApplication1
     
         
         public event EventHandler<bool> ToggleProgressBar;
-
         /// <summary>
         /// Default constructor, sets ToggleProgressBar to false initially
         /// </summary>
@@ -167,5 +167,7 @@ namespace WpfApplication1
             response.Close();
             return directoryInfo;
         }
+        
+        
     }
 }

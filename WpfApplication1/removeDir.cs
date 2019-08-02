@@ -42,14 +42,9 @@ namespace WpfApplication1
        
         public void DeleteDirectory(string HostName, string DirectoryToDelete)
         {
-            //String[] arguments = Environment.GetCommandLineArgs();
-            //String path = arguments[1];
-
+            
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{DirectoryToDelete}")));
-           
-            //request.Credentials = new NetworkCredential(UserName, Password);
-            //System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(remDirectory);
-
+                     
             try
             {
                 if (Directory.Exists(DirectoryToDelete))

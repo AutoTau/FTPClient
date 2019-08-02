@@ -72,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="copyDir.cs" />
     <Compile Include="removeDir.cs" />
     <Compile Include="removeFile.cs" />
     <Compile Include="userHistory.cs" />

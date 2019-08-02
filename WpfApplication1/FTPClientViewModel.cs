@@ -27,6 +27,7 @@ namespace WpfApplication1
         public ICommand RemoveFile { get; private set; }
         public ICommand RemoveDirectory { get; private set; }
         public ICommand LogOffFromRemote { get; private set; }
+        public Command CopyDirectory { get; }
 
         //private BackgroundWorker _bgWorker = new BackgroundWorker();
 
@@ -50,6 +51,7 @@ namespace WpfApplication1
             this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(HostName, PathOfFileToRemove));
             this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(HostName, PathOfFileToRemove));
             this.LogOffFromRemote = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName, UserName, Password, FileToUpload, Port, true));
+            this.CopyDirectory = new Command(ced => true, ed => CopyCertainDirectory.DirectoryCopy(HostName, UserName, Password, SourceDirName, DestDirName));
             ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;
         }
 
@@ -177,6 +179,10 @@ namespace WpfApplication1
                 this.OnPropertyChanged(() => this.PathOfFileToRemove);
             }
         }
+
+        public object CopyCertainDirectory { get; }
+        public object SourceDirName { get; }
+        public object DestDirName { get; }
 
         /// <summary>
         /// File dialog to select the file to upload.

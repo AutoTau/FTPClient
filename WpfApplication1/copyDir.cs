@@ -77,7 +77,7 @@ namespace CopyDir
                         return;
                     }
                     FtpWebRequest reqFTP;
-                    reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri($"ftp://{HostName}" + $"/{DestDirName}" + $"/{file}"));
+                    reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri($"ftp://{HostName}" + $"/{SourceDirName}" + $"/{file}"));
                     reqFTP.Credentials = new NetworkCredential(UserName, Password);
                     reqFTP.KeepAlive = false;
                     reqFTP.Method = WebRequestMethods.Ftp.DownloadFile;

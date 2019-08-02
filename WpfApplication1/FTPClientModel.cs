@@ -54,10 +54,13 @@ namespace WpfApplication1
                 bool isValidIp = IPAddress.TryParse(HostName, out IPAddress ipAddress);
                 if (!isValidIp && !HostName.ToLower().Equals("localhost"))
                     throw new Exception("invalid hostname/IP");
-
-                foreach (var singleFile in FileToUpload)
+                if (FileToUpload.Count == 0)
                 {
-
+                    MessageBox.Show("Please select a file(s) to upload.");
+                    return false;
+                }
+                foreach (var singleFile in FileToUpload)
+                {                        
                     double percentage = 0;
                     try
                     {
@@ -125,6 +128,12 @@ namespace WpfApplication1
                 bool isValidIp = IPAddress.TryParse(hostName, out IPAddress ipAddress);
                 if (!isValidIp && !hostName.ToLower().Equals("localhost"))
                     throw new Exception("invalid hostname/IP");
+
+                if(fileToDownload.Count == 0)
+                {
+                    MessageBox.Show("Please select a file(s) to download");
+                    return false;
+                }
 
                 foreach (var singleFile in fileToDownload)
                 {

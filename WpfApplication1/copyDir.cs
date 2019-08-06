@@ -1,86 +1,115 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Net;
-
 
 namespace WpfApplication1
 {
-    class CopyDir
+    class copyDir
     {
-        // copy directory from remote location and copy to local directory.        
+        // Copy directory contents from remote host to local directory
+        // makes a list of source directory files and subdirectory files, if they exist
+        // copies files to user designated destination directory
         
-        private static void DirectoryCopy(string HostName, string DirectoryToCopy, string DestinationDirectory, bool copySubDirs)
+        private void DirectoryCopy(string HostName, string UserName, string Password, string SourceDirName, string DestDirName)
         {
-
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{DirectoryToCopy}")));
-
-            try
-            {
-                if (Directory.Exists(DirectoryToCopy))
-                {
-                    request.Method = WebRequestMethods.Ftp.CopyDirectory; 
-                    Console.WriteLine("\nProcess complete: \"" + DirectoryToCopy + "\" copied");
-                }
-                else
-                {
-                    Console.WriteLine("directory not found");
-                }
-            }
-            catch (System.IO.IOException e)
-            {
-                Console.WriteLine("{0} is not a valid file or directory.", e);
-
-            }
-
             
-            DirectoryInfo[] dirs = dir.GetDirectories();
-            // If the destination directory doesn't exist, create it.
-            if (!Directory.Exists(DestinationDirectory))
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}/{SourceDirName}")));
+
+
+            string[] files = GetFileList();
+            foreach (string file in files)
             {
-                Directory.CreateDirectory(DestinationDirectory);
+                Download(file);
             }
 
-            // Get the files in the directory and copy them to the new location.
-            FileInfo[] files = dir.GetFiles();
-            foreach (FileInfo file in files)
+            string[] GetFileList()
             {
-                string temppath = Path.Combine(DestinationDirectory, file.Name);
-                file.CopyTo(temppath, false);
-            }
-
-            // If copying subdirectories, copy them and their contents to new location.
-            if (copySubDirs)
-            {
-                foreach (DirectoryInfo subdir in dirs)
+                string[] downloadFiles;
+                StringBuilder result = new StringBuilder();
+                WebResponse response = null;
+                StreamReader reader = null;
+                try
                 {
-                    string temppath = Path.Combine(DestinationDirectory, subdir.Name);
-                    DirectoryCopy(HostName, DirectoryToCopy, DestinationDirectory, copySubDirs);
+                    request.UseBinary = true;
+                    request.Credentials = new NetworkCredential(UserName, Password);
+                    request.Method = WebRequestMethods.Ftp.ListDirectory;
+                    request.Proxy = null;
+                    request.KeepAlive = false;
+                    request.UsePassive = false;
+                    response = request.GetResponse();
+                    reader = new StreamReader(response.GetResponseStream());
+                    string line = reader.ReadLine();
+                    while (line != null)
+                    {
+                        result.Append(line);
+                        result.Append("\n");
+                        line = reader.ReadLine();
+                    }
+                    // to remove the trailing '\n'
+                    result.Remove(result.ToString().LastIndexOf('\n'), 1);
+                    return result.ToString().Split('\n');
+                }
+                catch (Exception ex)
+                {
+                    if (reader != null)
+                    {
+                        reader.Close();
+                    }
+                    if (response != null)
+                    {
+                        response.Close();
+                    }
+                    Console.WriteLine(ex);
+                    downloadFiles = null;
+                    return downloadFiles;
                 }
             }
 
-            // copy remote directory to destination location 
-            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(DestinationDirectory);
-            // copy this dir to location "path".
-            try
+            void Download(string file) 
             {
-                if (Directory.Exists(DestinationDirectory))
+                try
                 {
-                    Console.WriteLine("\ndirectory already exists.");
+                    string uri = ($"ftp://{HostName}/{SourceDirName}/{file}");
+                    Uri serverUri = new Uri(uri);
+                    if (serverUri.Scheme != Uri.UriSchemeFtp)
+                    {
+                        return;
+                    }
+                    FtpWebRequest reqFTP;
+                    reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri($"ftp://{HostName}/{SourceDirName}/{file}"));
+                    reqFTP.Credentials = new NetworkCredential(UserName, Password);
+                    reqFTP.KeepAlive = false;
+                    reqFTP.Method = WebRequestMethods.Ftp.DownloadFile;
+                    reqFTP.UseBinary = true;
+                    reqFTP.Proxy = null;
+                    reqFTP.UsePassive = false;
+                    FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
+                    Stream responseStream = response.GetResponseStream();
+                    FileStream writeStream = new FileStream(DestDirName + "\"" + file, FileMode.Create);                
+    
+                    int Length = 2048;
+                    Byte[] buffer = new Byte[Length];
+                    int bytesRead = responseStream.Read(buffer, 0, Length);
+                    while (bytesRead > 0)
+                    {
+                        writeStream.Write(buffer, 0, bytesRead);
+                        bytesRead = responseStream.Read(buffer, 0, Length);
+                    }
+                    writeStream.Close();
+                    response.Close();
                 }
-                else
+                catch (WebException wEx)
                 {
-                    // Copy from the current directory, include subdirectories.
-                    DirectoryCopy(HostName, DirectoryToCopy, ".", true);
-                    // Print to console the results.
-                    Console.WriteLine("Current directory copied to: " + DestinationDirectory);
+                    //MessageBox.Show(wEx.Message, "Download Error");
+                    Console.WriteLine("Download error" + wEx);
                 }
-            }
-            catch (System.IO.IOException e)
-            {
-                Console.WriteLine("{0} is not a valid file or directory.", e);
+                catch (Exception ex)
+                {
+                    //MessageBox.Show(ex.Message, "Download Error");
+                    Console.WriteLine("Download error" + ex);
+                }
             }
         }
-        
-    }
-    
+    }    
 }

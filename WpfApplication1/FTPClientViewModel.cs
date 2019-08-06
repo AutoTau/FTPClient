@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
+using System.Net;
 
 namespace WpfApplication1
 {
@@ -18,6 +19,7 @@ namespace WpfApplication1
         FTPClientModel ClientModel;
         removeFile RemoveCertainFile;
         removeDir RemoveCertainDirectory;
+        copyDir CopyCertainDirectory; 
 
         public ICommand UploadFile { get; private set; }
         public ICommand SelectFileToUpload { get; private set; }
@@ -26,6 +28,7 @@ namespace WpfApplication1
         public ICommand RemoveFile { get; private set; }
         public ICommand RemoveDirectory { get; private set; }
         public ICommand LogOffFromRemote { get; private set; }
+        public ICommand CopyDirectory { get; private set; }
 
         //private BackgroundWorker _bgWorker = new BackgroundWorker();
 
@@ -41,14 +44,16 @@ namespace WpfApplication1
             ClientModel = new FTPClientModel();
             RemoveCertainFile = new removeFile();
             RemoveCertainDirectory = new removeDir();
+            CopyCertainDirectory = new copyDir();
 
             this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port,false));
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
             this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());
-            this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port));
-            this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(PathOfFileToRemove));
-            this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(PathOfFileToRemove));
+            this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port, false));
+            this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(HostName, PathOfFileToRemove));
+            this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(HostName, PathOfFileToRemove));
             this.LogOffFromRemote = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName, UserName, Password, FileToUpload, Port, true));
+            this.CopyDirectory = new Command(ced => true, ed => CopyCertainDirectory.DirectoryCopy(HostName, UserName, Password, SourceDirName, DestDirName));
             ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;
         }
 
@@ -177,6 +182,33 @@ namespace WpfApplication1
             }
         }
 
+        /// <summary>
+        /// Gets or sets the directory to be copied.
+        /// </summary>
+        private string _sourceDirName = string.Empty;
+        public string SourceDirName
+        {
+            get => _sourceDirName;
+            set
+            {
+                _sourceDirName = value;
+                this.OnPropertyChanged(() => this.SourceDirName);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the destination directory to be copied to.
+        /// </summary>
+        private string _destDirName = string.Empty;
+        public string DestDirName
+        {
+            get => _destDirName;
+            set
+            {
+                _destDirName = value;
+                this.OnPropertyChanged(() => this.DestDirName);
+            }
+        }
         /// <summary>
         /// File dialog to select the file to upload.
         /// Default path is the system desktop path.

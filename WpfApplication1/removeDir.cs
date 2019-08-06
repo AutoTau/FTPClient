@@ -2,21 +2,16 @@
 // CS410 Agile group project
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using System.Diagnostics;
-using System.IO.IsolatedStorage;
-using System.Collections;
-
+using System.Net;
 
 namespace WpfApplication1
 {
 
     public class removeDir
     {
+
+        
         // Process directory passed in as argument
         public static void ProcessDirectory(string targetDirectory)
         {
@@ -39,19 +34,26 @@ namespace WpfApplication1
 
 
 
-        public void DeleteDirectory(string path)
+        /// <summary>
+        /// Deletes the directory the user selects
+        /// </summary>
+        /// <param name="HostName"></param>
+        /// <param name="UserName"></param>
+        /// <param name="Password"></param>
+        /// <param name="DirectoryToDelete"></param>
+        /// 
+        public void DeleteDirectory(string HostName, string UserName, string Password, string DirectoryToDelete)
         {
-            //String[] arguments = Environment.GetCommandLineArgs();
-            //String path = arguments[1];
+            
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{DirectoryToDelete}")));
+            request.Credentials = new NetworkCredential(UserName, Password);
 
-            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(path);
-            // Delete this dir.
             try
             {
-                if (Directory.Exists(path))
+                if (Directory.Exists(DirectoryToDelete))
                 {
-                    dir.Delete(true);
-                    Console.WriteLine("\nProcess complete: \"" + path + "\" deleted");
+                    request.Method = WebRequestMethods.Ftp.RemoveDirectory; //dir.Delete(true);
+                    Console.WriteLine("\nProcess complete: \"" + DirectoryToDelete + "\" deleted");
                 }
                 else
                 {

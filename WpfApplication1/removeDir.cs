@@ -63,6 +63,11 @@ namespace WpfApplication1
 
             }
         }
+
+        internal void DeleteDirectory(string hostName, object pathOfDirectoryToRemove)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

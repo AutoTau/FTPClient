@@ -110,9 +110,6 @@ namespace WpfApplication1
                     Console.WriteLine("Download error" + ex);
                 }
             }
-
         }
-
-    }
-    
+    }    
 }

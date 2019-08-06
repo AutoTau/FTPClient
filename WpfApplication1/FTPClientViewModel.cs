@@ -129,8 +129,8 @@ namespace WpfApplication1
         /// <summary>
         /// Gets or sets the File to be uploaded.
         /// </summary>
-        private string _fileToUpload = string.Empty;
-        public string FileToUpload
+        private List<string> _fileToUpload = new List<string>();
+        public List<string> FileToUpload
         {
             get => _fileToUpload;
             set
@@ -157,8 +157,8 @@ namespace WpfApplication1
         /// <summary>
         /// Gets or sets the File to download.
         /// </summary>
-        private string _fileToDownload = string.Empty;
-        public string FileToDownload
+        private List<string> _fileToDownload = new List<string>();
+        public List<string> FileToDownload
         {
             get => _fileToDownload;
             set
@@ -221,14 +221,19 @@ namespace WpfApplication1
             {
                 Filter = "All files (*.*)|*.*|All files (*.*)|*.*",
                 FilterIndex = 1,
-                InitialDirectory = startDirectory.ToString()
+                InitialDirectory = startDirectory.ToString(),
+				Multiselect = true
             };
 
             DialogResult result = dialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                FileToUpload = dialog.FileName.ToString();
+				FileToUpload = new List<string>();
+				foreach (var file in dialog.FileNames)
+				{
+					FileToUpload.Add(file.ToString());
+				}
             }
         }
 
@@ -244,14 +249,18 @@ namespace WpfApplication1
             {
                 Filter = "All files (*.*)|*.*|All files (*.*)|*.*",
                 FilterIndex = 1,
-                InitialDirectory = startDirectory.ToString()
+                InitialDirectory = startDirectory.ToString(),
+				Multiselect = true
             };
 
             DialogResult result = dialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                FileToDownload = dialog.FileName.ToString();
+				foreach (var file in dialog.FileNames)
+				{
+					FileToDownload.Add(file.ToString());
+				}
             }
         }
 

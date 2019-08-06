@@ -38,13 +38,16 @@ namespace WpfApplication1
         /// Deletes the directory the user selects
         /// </summary>
         /// <param name="HostName"></param>
+        /// <param name="UserName"></param>
+        /// <param name="Password"></param>
         /// <param name="DirectoryToDelete"></param>
-       
-        public void DeleteDirectory(string HostName, string DirectoryToDelete)
+        /// 
+        public void DeleteDirectory(string HostName, string UserName, string Password, string DirectoryToDelete)
         {
             
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{DirectoryToDelete}")));
-                     
+            request.Credentials = new NetworkCredential(UserName, Password);
+
             try
             {
                 if (Directory.Exists(DirectoryToDelete))

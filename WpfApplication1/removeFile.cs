@@ -19,16 +19,16 @@ namespace WpfApplication1
         /// Deletes the file the user selects
         /// </summary>
         /// <param name="HostName"></param>
+        /// <param name="UserName"></param>
+        /// <param name="Password"></param>
         /// <param name="FileToDelete"></param>
 
-        public void DeleteFile(string HostName, string FileToDelete)
+        public void DeleteFile(string HostName, string UserName, string Password, string FileToDelete)
         {
-            //String[] arguments = Environment.GetCommandLineArgs();
-            //String path = arguments[1];
-
+            
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{FileToDelete}")));
             
-           // request.Credentials = new NetworkCredential(UserName, Password);
+            request.Credentials = new NetworkCredential(UserName, Password);
             request.Method = WebRequestMethods.Ftp.DeleteFile;
 
             System.IO.FileInfo file = new System.IO.FileInfo(FileToDelete);

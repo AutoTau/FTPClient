@@ -19,6 +19,7 @@ namespace WpfApplication1
         FTPClientModel ClientModel;
         removeFile RemoveCertainFile;
         removeDir RemoveCertainDirectory;
+        copyDir CopyCertainDirectory; 
 
         public ICommand UploadFile { get; private set; }
         public ICommand SelectFileToUpload { get; private set; }
@@ -27,7 +28,7 @@ namespace WpfApplication1
         public ICommand RemoveFile { get; private set; }
         public ICommand RemoveDirectory { get; private set; }
         public ICommand LogOffFromRemote { get; private set; }
-        public Command CopyDirectory { get; }
+        public ICommand CopyDirectory { get; private set; }
 
         //private BackgroundWorker _bgWorker = new BackgroundWorker();
 
@@ -43,6 +44,7 @@ namespace WpfApplication1
             ClientModel = new FTPClientModel();
             RemoveCertainFile = new removeFile();
             RemoveCertainDirectory = new removeDir();
+            CopyCertainDirectory = new copyDir();
 
             this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port,false));
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
@@ -180,10 +182,33 @@ namespace WpfApplication1
             }
         }
 
-        public object CopyCertainDirectory { get; }
-        public object SourceDirName { get; }
-        public object DestDirName { get; }
+        /// <summary>
+        /// Gets or sets the directory to be copied.
+        /// </summary>
+        private string _sourceDirName = string.Empty;
+        public string SourceDirName
+        {
+            get => _sourceDirName;
+            set
+            {
+                _sourceDirName = value;
+                this.OnPropertyChanged(() => this.SourceDirName);
+            }
+        }
 
+        /// <summary>
+        /// Gets or sets the destination directory to be copied to.
+        /// </summary>
+        private string _destDirName = string.Empty;
+        public string DestDirName
+        {
+            get => _destDirName;
+            set
+            {
+                _destDirName = value;
+                this.OnPropertyChanged(() => this.DestDirName);
+            }
+        }
         /// <summary>
         /// File dialog to select the file to upload.
         /// Default path is the system desktop path.

@@ -3,18 +3,18 @@ using System.IO;
 using System.Text;
 using System.Net;
 
-namespace CopyDir
+namespace WpfApplication1
 {
-    class CopyDir
+    class copyDir
     {
         // Copy directory contents from remote host to local directory
         // makes a list of source directory files and subdirectory files, if they exist
         // copies files to user designated destination directory
         
-        private static void DirectoryCopy(string HostName, string UserName, string Password, string SourceDirName, string DestDirName)
+        private void DirectoryCopy(string HostName, string UserName, string Password, string SourceDirName, string DestDirName)
         {
             
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}" + $"/{SourceDirName}")));
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}/{SourceDirName}")));
 
 
             string[] files = GetFileList();
@@ -70,14 +70,14 @@ namespace CopyDir
             {
                 try
                 {
-                    string uri = ($"ftp://{HostName}" + $"/{SourceDirName}" + $"/{file}");
+                    string uri = ($"ftp://{HostName}/{SourceDirName}/{file}");
                     Uri serverUri = new Uri(uri);
                     if (serverUri.Scheme != Uri.UriSchemeFtp)
                     {
                         return;
                     }
                     FtpWebRequest reqFTP;
-                    reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri($"ftp://{HostName}" + $"/{SourceDirName}" + $"/{file}"));
+                    reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri($"ftp://{HostName}/{SourceDirName}/{file}"));
                     reqFTP.Credentials = new NetworkCredential(UserName, Password);
                     reqFTP.KeepAlive = false;
                     reqFTP.Method = WebRequestMethods.Ftp.DownloadFile;

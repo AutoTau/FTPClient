@@ -50,8 +50,8 @@ namespace WpfApplication1
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
             this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());
             this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port, false));
-            this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(HostName, PathOfFileToRemove));
-            this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(HostName, PathOfFileToRemove));
+            this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(HostName, UserName, Password, PathOfFileToRemove));
+            this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(HostName, UserName, Password, PathOfFileToRemove));
             this.LogOffFromRemote = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName, UserName, Password, FileToUpload, Port, true));
             this.CopyDirectory = new Command(ced => true, ed => CopyCertainDirectory.DirectoryCopy(HostName, UserName, Password, SourceDirName, DestDirName));
             ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;

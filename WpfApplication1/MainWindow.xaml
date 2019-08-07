@@ -171,7 +171,6 @@
                 </StackPanel>
             </Button.ToolTip>
         </Button>
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" HorizontalAlignment="Left" Height="31" Margin="238,48.8,0,-54.2" Grid.Row="7" VerticalAlignment="Top" Width="95"/>
         <Button Grid.Column="1" Content="Log Off"  Command="{Binding LogOffFromRemote}" FontSize="12" Height="31" Margin="0,100.8,10.4,-106.2" Width="61" VerticalAlignment="Center" HorizontalAlignment="Right" x:Name="LogOffFromRemoteServer_Copy" Grid.Row="7">
             <Button.ToolTip>
                 <StackPanel>

@@ -11,7 +11,7 @@ namespace WpfApplication1
         // makes a list of source directory files and subdirectory files, if they exist
         // copies files to user designated destination directory
         
-        private void DirectoryCopy(string HostName, string UserName, string Password, string SourceDirName, string DestDirName)
+        public void DirectoryCopy(string HostName, string UserName, string Password, string SourceDirName, string DestDirName)
         {
             
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format($"ftp://{HostName}/{SourceDirName}")));

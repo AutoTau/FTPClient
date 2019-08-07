@@ -19,9 +19,11 @@ namespace WpfApplication1
         FTPClientModel ClientModel;
         removeFile RemoveCertainFile;
         removeDir RemoveCertainDirectory;
-        copyDir CopyCertainDirectory; 
+        copyDir CopyCertainDirectory;
+        userHistory history;
 
         public ICommand UploadFile { get; private set; }
+        public ICommand SaveUserInfo { get; private set; }
         public ICommand SelectFileToUpload { get; private set; }
         public ICommand SelectFileToDownload { get; private set; }
         public ICommand DownloadFile { get; private set; }
@@ -45,6 +47,7 @@ namespace WpfApplication1
             RemoveCertainFile = new removeFile();
             RemoveCertainDirectory = new removeDir();
             CopyCertainDirectory = new copyDir();
+            history = new userHistory();
 
             this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port,false));
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
@@ -54,6 +57,7 @@ namespace WpfApplication1
             this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(HostName, UserName, Password, PathOfFileToRemove));
             this.LogOffFromRemote = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName, UserName, Password, FileToUpload, Port, true));
             this.CopyDirectory = new Command(ced => true, ed => CopyCertainDirectory.DirectoryCopy(HostName, UserName, Password, SourceDirName, DestDirName));
+            this.SaveUserInfo = new Command(ced => true, ed => history.writeUserLog(HostName, UserName, Password, Port));
             ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;
         }
 

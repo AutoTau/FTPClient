@@ -52,7 +52,7 @@ namespace WpfApplication1
             {
                 if (Directory.Exists(DirectoryToDelete))
                 {
-                    request.Method = WebRequestMethods.Ftp.RemoveDirectory; //dir.Delete(true);
+                    request.Method = WebRequestMethods.Ftp.RemoveDirectory; 
                     Console.WriteLine("\nProcess complete: \"" + DirectoryToDelete + "\" deleted");
                 }
                 else
@@ -67,10 +67,7 @@ namespace WpfApplication1
             }
         }
 
-        internal void DeleteDirectory(string hostName, object pathOfDirectoryToRemove)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }
 

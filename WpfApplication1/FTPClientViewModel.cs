@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
+using System.Net;
 
 namespace WpfApplication1
 {
@@ -18,14 +19,18 @@ namespace WpfApplication1
         FTPClientModel ClientModel;
         removeFile RemoveCertainFile;
         removeDir RemoveCertainDirectory;
+        copyDir CopyCertainDirectory;
+        userHistory history;
 
         public ICommand UploadFile { get; private set; }
+        public ICommand SaveUserInfo { get; private set; }
         public ICommand SelectFileToUpload { get; private set; }
         public ICommand SelectFileToDownload { get; private set; }
         public ICommand DownloadFile { get; private set; }
         public ICommand RemoveFile { get; private set; }
         public ICommand RemoveDirectory { get; private set; }
         public ICommand LogOffFromRemote { get; private set; }
+        public ICommand CopyDirectory { get; private set; }
 
         //private BackgroundWorker _bgWorker = new BackgroundWorker();
 
@@ -41,14 +46,18 @@ namespace WpfApplication1
             ClientModel = new FTPClientModel();
             RemoveCertainFile = new removeFile();
             RemoveCertainDirectory = new removeDir();
+            CopyCertainDirectory = new copyDir();
+            history = new userHistory();
 
             this.UploadFile = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName,UserName,Password,FileToUpload,Port,false));
             this.SelectFileToUpload = new Command(ced => true, ed => this.InitiateDialogBox());
             this.SelectFileToDownload = new Command(ced => true, ed => this.SelectFileFromFtpServer());
-            this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port,false));
-            this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(PathOfFileToRemove));
-            this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(PathOfFileToRemove));
+            this.DownloadFile = new Command(ced => true, ed => this.ClientModel.DownloadSelectedFile(HostName, UserName, Password, FileToDownload, Port));
+            this.RemoveFile = new Command(ced => true, ed => RemoveCertainFile.DeleteFile(HostName, UserName, Password, PathOfFileToRemove));
+            this.RemoveDirectory = new Command(ced => true, ed => RemoveCertainDirectory.DeleteDirectory(HostName, UserName, Password, PathOfFileToRemove));
             this.LogOffFromRemote = new Command(ced => true, ed => ClientModel.UploadSelectedFile(HostName, UserName, Password, FileToUpload, Port, true));
+            this.CopyDirectory = new Command(ced => true, ed => CopyCertainDirectory.DirectoryCopy(HostName, UserName, Password, SourceDirName, DestDirName));
+            this.SaveUserInfo = new Command(ced => true, ed => history.writeUserLog(HostName, UserName, Password, Port));
             ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;
         }
 
@@ -124,8 +133,8 @@ namespace WpfApplication1
         /// <summary>
         /// Gets or sets the File to be uploaded.
         /// </summary>
-        private string _fileToUpload = string.Empty;
-        public string FileToUpload
+        private List<string> _fileToUpload = new List<string>();
+        public List<string> FileToUpload
         {
             get => _fileToUpload;
             set
@@ -152,8 +161,8 @@ namespace WpfApplication1
         /// <summary>
         /// Gets or sets the File to download.
         /// </summary>
-        private string _fileToDownload = string.Empty;
-        public string FileToDownload
+        private List<string> _fileToDownload = new List<string>();
+        public List<string> FileToDownload
         {
             get => _fileToDownload;
             set
@@ -178,6 +187,33 @@ namespace WpfApplication1
         }
 
         /// <summary>
+        /// Gets or sets the directory to be copied.
+        /// </summary>
+        private string _sourceDirName = string.Empty;
+        public string SourceDirName
+        {
+            get => _sourceDirName;
+            set
+            {
+                _sourceDirName = value;
+                this.OnPropertyChanged(() => this.SourceDirName);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the destination directory to be copied to.
+        /// </summary>
+        private string _destDirName = string.Empty;
+        public string DestDirName
+        {
+            get => _destDirName;
+            set
+            {
+                _destDirName = value;
+                this.OnPropertyChanged(() => this.DestDirName);
+            }
+        }
+        /// <summary>
         /// File dialog to select the file to upload.
         /// Default path is the system desktop path.
         /// </summary>
@@ -189,14 +225,19 @@ namespace WpfApplication1
             {
                 Filter = "All files (*.*)|*.*|All files (*.*)|*.*",
                 FilterIndex = 1,
-                InitialDirectory = startDirectory.ToString()
+                InitialDirectory = startDirectory.ToString(),
+				Multiselect = true
             };
 
             DialogResult result = dialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                FileToUpload = dialog.FileName.ToString();
+				FileToUpload = new List<string>();
+				foreach (var file in dialog.FileNames)
+				{
+					FileToUpload.Add(file.ToString());
+				}
             }
         }
 
@@ -212,14 +253,18 @@ namespace WpfApplication1
             {
                 Filter = "All files (*.*)|*.*|All files (*.*)|*.*",
                 FilterIndex = 1,
-                InitialDirectory = startDirectory.ToString()
+                InitialDirectory = startDirectory.ToString(),
+				Multiselect = true
             };
 
             DialogResult result = dialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                FileToDownload = dialog.FileName.ToString();
+				foreach (var file in dialog.FileNames)
+				{
+					FileToDownload.Add(file.ToString());
+				}
             }
         }
 

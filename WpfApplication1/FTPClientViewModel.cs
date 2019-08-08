@@ -59,9 +59,24 @@ namespace WpfApplication1
             this.CopyDirectory = new Command(ced => true, ed => CopyCertainDirectory.DirectoryCopy(HostName, UserName, Password, SourceDirName, DestDirName));
             this.SaveUserInfo = new Command(ced => true, ed => history.writeUserLog(HostName, UserName, Password, Port));
             ClientModel.ToggleProgressBar += FTPClientModel_ToggleProgressBar;
-        }
+        } 
+        
+        
+        /// <summary>
+       /// Gets or sets the permission of a file/dir
+       /// </summary>
+       private string _permission = string.Empty;
+       public string Permission
+       {
+           get => _permission;
+           set
+           {
+               _permission = value;
+               this.OnPropertyChanged(() => this.Permission);
+           }
+       }
 
-
+    
         /// <summary>
         /// Toggles the progress bar
         /// </summary>

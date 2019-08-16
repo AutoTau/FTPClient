@@ -11,8 +11,8 @@ namespace WpfApplication1{
 	/// <param name="file_1_path">The path to the first file as operand</param>
 	/// <param name="file_2_path">The path to the first file as operand</param>
     class fileDiff{
-        private static HashAlgorithm hash = SHA256.Create();
-        private string hash(string input){ return fileDiff.hash.ComputeHash(Encoding.UTF8.GetBytes(input)); }
+        private static HashAlgorithm hasher = SHA256.Create();
+        private string hash(string input){ return Encoding.UTF8.GetString(fileDiff.hasher.ComputeHash(Encoding.ASCII.GetBytes(input))); }
 
         public bool files_are_different(string file_1_path, string file_2_path){
             int file_1_size;
@@ -20,19 +20,14 @@ namespace WpfApplication1{
 
             if(file_1_path == file_2_path) return true;
 
-            FileStream file_1 = new FileStream(file_1_path, FileMode.Open, FileAccess.Read);
-            FileStream file_2 = new FileStream(file_2_path, FileMode.Open, FileAccess.Read);
-
-            if(file_1.Length != file_2.Length) { file_1.Close(); file_2.Close(); return false; }
+            StreamReader file_1 = new StreamReader(new FileStream(file_1_path, FileMode.Open, FileAccess.Read));
+            StreamReader file_2 = new StreamReader(new FileStream(file_2_path, FileMode.Open, FileAccess.Read));
 
             string line_1 = file_1.ReadLine();
             string line_2 = file_2.ReadLine();
 
             while(line_1 != null && line_2 != null){
-                if(line_1 != line_2){
-                    file_1.Close(); file_2.Close(); return false;
-                    Console.WriteLine("");
-                }
+                if(line_1 != line_2){ file_1.Close(); file_2.Close(); return false; }
 
                 line_1 = file_1.ReadLine();
                 line_2 = file_2.ReadLine();
@@ -48,20 +43,19 @@ namespace WpfApplication1{
         /// <param name="file_2_path">The path to the first file as operand</param>
         public string file_diff(string path_1, string path_2){
             TimeSpan time = DateTime.UtcNow - new DateTime(1970, 1, 1);
-            int elapsed_time = (int)time.TotalSeconds;
-            strinf diff_path = "./temp_diff" + elapsed_time + ".txt";
+            int elapsed_time = (int) time.TotalSeconds;
+            string diff_path = "./temp_diff" + elapsed_time + ".txt";
 
-            FileStream file_1 = new FileStream(file_1_path, FileMode.Open, FileAccess.Read);
-            FileStream file_2 = new FileStream(file_2_path, FileMode.Open, FileAccess.Read);
+            StreamReader file_1 = new StreamReader(new FileStream(path_1, FileMode.Open, FileAccess.Read));
+            StreamReader file_2 = new StreamReader(new FileStream(path_2, FileMode.Open, FileAccess.Read));
             FileStream diff = new FileStream(diff_path, FileMode.CreateNew, FileAccess.Write);
-
-            if(file_1.Length != file_2.Length) { file_1.Close(); file_2.Close(); return false; }
 
             string line_1 = file_1.ReadLine();
             string line_2 = file_2.ReadLine();
 
             while(line_1 != null && line_2 != null){
-                if(line_1 != line_2){ diff.Write(hash(line_1 + line_2) + "\n> " + line_1 + "\n< " + line_2); }
+                byte[] data = Encoding.ASCII.GetBytes(hash(line_1 + line_2) + "\n> " + line_1 + "\n< " + line_2);
+                if (line_1 != line_2){ diff.Write(data, 0, 256); }
 
                 line_1 = file_1.ReadLine();
                 line_2 = file_2.ReadLine();

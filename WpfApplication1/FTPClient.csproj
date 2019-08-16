@@ -91,6 +91,7 @@
     </ApplicationDefinition>
     <Compile Include="chmod.cs" />
     <Compile Include="copyDir.cs" />
+    <Compile Include="fileDiff.cs" />
     <Compile Include="removeDir.cs" />
     <Compile Include="removeFile.cs" />
     <Compile Include="UnitTesting.cs" />

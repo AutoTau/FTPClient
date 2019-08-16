@@ -25,7 +25,10 @@ namespace WpfApplication1{
             string line_2 = file_2.ReadLine();
 
             while(line_1 != null && line_2 != null){
-                if(line_1 != line_2){ file_1.Close(); file_2.Close(); return false; }
+                if(line_1 != line_2){
+                    file_1.Close(); file_2.Close(); return false;
+                    Console.WriteLine("");
+                }
 
                 line_1 = file_1.ReadLine();
                 line_2 = file_2.ReadLine();
